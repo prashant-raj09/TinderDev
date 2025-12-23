@@ -1,0 +1,73 @@
+# TinderDev 🚀
+
+This is a Node.js backend project built using **Express.js**.  
+It uses **Nodemon** to automatically restart the server during development.
+
+---
+
+## 🛠️ Project Setup Instructions
+
+### 1️⃣ Initialize the Project
+
+Initialize the project using npm:
+
+```bash
+npm init
+```
+This command creates a package.json file which is used to manage:
+
+Project configuration
+
+Dependencies
+
+Scripts
+
+2️⃣ Install Express
+
+Install Express to create the backend server:
+```
+npm i express
+```
+3️⃣ Install Nodemon
+
+Install Nodemon globally:
+```npm install -g nodemon
+```
+🔁 Why Nodemon?
+
+Before Nodemon
+If you make any changes in the code, you must restart the server manually every time:
+``🔁 Why Nodemon?
+
+node src/app.js
+After Installing Nodemon
+You only need to run the command once:
+```nodemon src/app.js```
+Nodemon will automatically restart the server whenever any file changes.
+
+4️⃣ Update package.json Scripts
+
+Add the following scripts inside the package.json file:
+```
+"scripts": {
+  "start": "node src/app.js",
+  "dev": "nodemon src/app.js"
+}```
+
+5️⃣ Run the Server
+
+Run the server in development mode:
+```npm run dev```
+Run the server in production mode:
+```npm start```
+✅ Summary
+
+```npm init ```→ initializes the project and creates package.json
+
+```npm i express``` → installs Express.js
+
+```npm install -g nodemon``` → installs Nodemon globally
+
+```npm run dev ```→ runs the server with auto-reload
+
+```npm start``` → runs the server normally
