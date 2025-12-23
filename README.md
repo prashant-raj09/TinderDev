@@ -55,7 +55,7 @@ Add the following scripts inside the package.json file:
 "scripts": {
   "start": "node src/app.js",
   "dev": "nodemon src/app.js"
-}```
+}
 
 5️⃣ Run the Server
 
@@ -69,22 +69,21 @@ npm start
 ```
 ✅ Summary
 
-```bash
+
 npm init
- ```→ initializes the project and creates package.json
+ → initializes the project and creates package.json
 
-``` bash
+
 npm i express
-``` → installs Express.js
+ → installs Express.js
 
-```bash
 npm install -g nodemon
-``` → installs Nodemon globally
+→ installs Nodemon globally
 
-```bash
+
 npm run dev
- ```→ runs the server with auto-reload
+ → runs the server with auto-reload
 
-```bash
+
 npm start
-``` → runs the server normally
+→ runs the server normally
