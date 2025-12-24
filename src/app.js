@@ -4,10 +4,12 @@ const app = express();
 const User = require("./models/user");
 const { validateSignUpData, validateLoginData } = require("./utils/validation");
 const bcrypt = require("bcryptjs");
+const cookieParser = require("cookie-parser");
+const jwtToken = require("jsonwebtoken");
 
 // Middleware -> From Postman we get data inthe form of JSON so this middleware convert the JSON in JS object
 app.use(express.json());
-
+app.use(cookieParser());
 // Sign Up Route
 app.post("/signup", async (req, res) => {
   try {
@@ -58,6 +60,11 @@ app.post("/login", async (req, res) => {
     if (!isPasswordMatch) {
       throw new Error("Invalid login credentials.");
     } else {
+      // Generate JWT token
+      const token = await jwtToken.sign({ _id: user._id }, "TINDER@DEV$301");
+      // Set the token in cookies
+      res.cookie("token", token);
+      console.log("Token generated : ", token);
       res.send("Login Successful...");
     }
   } catch (err) {
@@ -65,6 +72,26 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// Profile of logined in user
+app.get("/profile", async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    console.log("Cookies : ", cookies);
+    const { token } = cookies;
+    if (!token) {
+      throw new Error("Please login first...");
+    }
+    const decodedMessage = jwtToken.verify(token, "TINDER@DEV$301");
+    const { _id } = decodedMessage;
+    const user = await User.findById(_id);
+    if (!user) {
+      throw new Error("User not found...");
+    }
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("Error : " + err.message);
+  }
+});
 app.patch("/user/:userId", async (req, res) => {
   const userId = req.params?.userId;
   const data = req.body;
