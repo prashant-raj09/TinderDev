@@ -3,9 +3,9 @@ const connectDB = require("./config/database");
 const app = express();
 const User = require("./models/user");
 const { validateSignUpData, validateLoginData } = require("./utils/validation");
-const bcrypt = require("bcryptjs");
+
 const cookieParser = require("cookie-parser");
-const jwtToken = require("jsonwebtoken");
+
 const { userAuth } = require("./middlewares/auth");
 // Middleware -> From Postman we get data inthe form of JSON so this middleware convert the JSON in JS object
 app.use(express.json());
@@ -55,15 +55,14 @@ app.post("/login", async (req, res) => {
       throw new Error("Invalid login credentials.");
     }
 
-    // Compare the provided password with the stored hashed password
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    // Compare the provided password with the stored hashed password and validateaPassword is async function in user model
+    const isPasswordMatch = await user.validatePassword(password);
+
     if (!isPasswordMatch) {
       throw new Error("Invalid login credentials.");
     } else {
-      // Generate JWT token
-      const token = await jwtToken.sign({ _id: user._id }, "TINDER@DEV$301", {
-        expiresIn: "1d",
-      });
+      // Generate JWT token and getJWT is async function in user model
+      const token = await user.getJWT();
       // Set the token in cookies
       res.cookie("token", token, {
         expires: new Date(Date.now() + 86400000),
