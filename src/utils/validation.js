@@ -23,4 +23,23 @@ const validateLoginData = (req) => {
   }
 };
 
-module.exports = { validateSignUpData, validateLoginData };
+const validateUpdateProfileData = (req)=>{
+  const UPDATE_ALLOWED_FIELDS = ["firstName","lastName","age","gender","about","photoUrl","skills"];
+  const updates = Object.keys(req.body);
+  // const isValidOperation = updates.every((update) =>
+  //   UPDATE_ALLOWED_FIELDS.includes(update)
+  // );
+  
+  // return isValidOperation;
+
+  const invalidFields = updates.filter(
+    (field) => !UPDATE_ALLOWED_FIELDS.includes(field)
+  );
+
+  return {
+    isValid: invalidFields.length === 0,
+    invalidFields,
+  };
+}
+
+module.exports = { validateSignUpData, validateLoginData, validateUpdateProfileData };
