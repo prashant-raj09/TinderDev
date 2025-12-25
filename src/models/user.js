@@ -70,6 +70,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// Genearte JWT Token
 userSchema.methods.getJWT = async function () {
   const user = this;
   const token = await jwtToken.sign({ _id: user._id }, "TINDER@DEV$301", {
@@ -78,6 +79,7 @@ userSchema.methods.getJWT = async function () {
   return token;
 };
 
+// Validate Password
 userSchema.methods.validatePassword = async function (inputPassword) {
   const user = this;
   const hashedPassword = user.password;

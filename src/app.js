@@ -1,90 +1,22 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
-const User = require("./models/user");
-const { validateSignUpData, validateLoginData } = require("./utils/validation");
 
 const cookieParser = require("cookie-parser");
 
-const { userAuth } = require("./middlewares/auth");
 // Middleware -> From Postman we get data inthe form of JSON so this middleware convert the JSON in JS object
 app.use(express.json());
 app.use(cookieParser());
-// Sign Up Route
-app.post("/signup", async (req, res) => {
-  try {
-    // Validate incoming data
-    validateSignUpData(req);
 
-    // Destructure the request body
-    const { firstName, lastName, emailId, password } = req.body;
 
-    // Hash the password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
+const authRouter = require("./routes/auth");
+const profileRouter = require("./routes/profile");
+const requestsRouter = require("./routes/request"); 
 
-    // Create a new user instance
-    const user = new User({
-      firstName,
-      lastName,
-      emailId,
-      password: hashedPassword,
-    });
 
-    // Save the user to the database
-    await user.save();
-
-    // Send a success response
-    res.send("User added successfully..." + user);
-  } catch (err) {
-    res.status(400).send("Error : " + err.message);
-  }
-});
-
-// Login Route
-app.post("/login", async (req, res) => {
-  try {
-    // Validate incoming data
-    validateLoginData(req);
-
-    // Destructure the request body
-    const { emailId, password } = req.body;
-
-    // Find the user by emailId
-    const user = await User.findOne({ emailId: emailId });
-    if (!user) {
-      throw new Error("Invalid login credentials.");
-    }
-
-    // Compare the provided password with the stored hashed password and validateaPassword is async function in user model
-    const isPasswordMatch = await user.validatePassword(password);
-
-    if (!isPasswordMatch) {
-      throw new Error("Invalid login credentials.");
-    } else {
-      // Generate JWT token and getJWT is async function in user model
-      const token = await user.getJWT();
-      // Set the token in cookies
-      res.cookie("token", token, {
-        expires: new Date(Date.now() + 86400000),
-        httpOnly: true,
-      });
-
-      res.send("Login Successful...");
-    }
-  } catch (err) {
-    res.status(400).send("Login Failed " + err.message);
-  }
-});
-
-// Profile of logined in user
-app.get("/profile", userAuth, async (req, res) => {
-  try {
-    const user = req.user;
-    res.send(user);
-  } catch (err) {
-    res.status(400).send("Error : " + err.message);
-  }
-});
+app.use("/", authRouter);
+app.use("/", profileRouter);
+app.use("/", requestsRouter); 
 
 connectDB()
   .then(() => {
