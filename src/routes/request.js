@@ -58,4 +58,45 @@ requestsRouter.post(
   }
 );
 
+requestsRouter.post(
+  "/reques/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const { status, requestId } = req.params;
+      const loggedInUser = req.user;
+      const ALLOWED_STATUS = ["accepted", "rejected"];
+
+      if (!ALLOWED_STATUS.includes(status)) {
+        return res
+          .status(400)
+          .send(
+            "Invalid status value. Allowed values are: " +
+              ALLOWED_STATUS.join(", ")
+          );
+      }
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+      });
+      if (!connectionRequest) {
+        return res
+          .status(404)
+          .send(
+            "No pending connection request found with the provided ID for review."
+          );
+      }
+      connectionRequest.status = status;
+      const data = await connectionRequest.save();
+      res.json({
+        message: `You have ${status} the connection request.`,
+        request: data,
+      });
+    } catch (err) {
+      res.status(400).send("Error : " + err.message);
+    }
+  }
+);
+
 module.exports = requestsRouter;
