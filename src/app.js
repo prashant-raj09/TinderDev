@@ -3,8 +3,16 @@ const connectDB = require("./config/database");
 const app = express();
 
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
-// Middleware -> From Postman we get data inthe form of JSON so this middleware convert the JSON in JS object
+
+// CORS Middleware -> If frontend and backend are on different domains or ports
+app.use(cors({
+  origin:"http://localhost:5173",
+  credentials:true
+}));
+
+// Middleware -> From Postman we get data in the form of JSON so this middleware convert the JSON in JS object
 app.use(express.json());
 app.use(cookieParser());
 

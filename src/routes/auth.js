@@ -28,7 +28,7 @@ authRouter.post("/signup", async (req, res) => {
     await user.save();
 
     // Send a success response
-    res.send("User added successfully..." + user);
+    res.send( user);
   } catch (err) {
     res.status(400).send("Error : " + err.message);
   }
@@ -64,7 +64,7 @@ authRouter.post("/login", async (req, res) => {
         httpOnly: true,
       });
 
-      res.send("Login Successful...");
+      res.send( user);
     }
   } catch (err) {
     res.status(400).send("Login Failed " + err.message);
