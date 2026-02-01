@@ -24,12 +24,11 @@ const validateLoginData = (req) => {
 };
 
 const validateUpdateProfileData = (req)=>{
-  const UPDATE_ALLOWED_FIELDS = ["firstName","lastName","age","gender","about","photoUrl","skills"];
+  const UPDATE_ALLOWED_FIELDS = ["firstName","lastName","age","gender","about","photoUrl","skills","profession"];
   const updates = Object.keys(req.body);
   // const isValidOperation = updates.every((update) =>
   //   UPDATE_ALLOWED_FIELDS.includes(update)
   // );
-  
   // return isValidOperation;
 
   const invalidFields = updates.filter(

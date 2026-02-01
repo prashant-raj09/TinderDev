@@ -68,6 +68,12 @@ const userSchema = new mongoose.Schema(
     skills: {
       type: [String],
     },
+    profession:{
+      type:String,
+      maxLength:50,
+      default:"Not Specified",
+      trim:true
+    }
   },
   {
     timestamps: true,
